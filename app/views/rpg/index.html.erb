@@ -1,0 +1,58 @@
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Ninja Gold Game</title>
+	<link rel="stylesheet" href="/assets/normalize.css">
+	<link rel="stylesheet" href="/assets/ninja_gold_game.css">
+</head>
+<body>
+	<div id="total_gold">
+		<h3>Your total gold is:</h3>
+		<h1><%= session[:gold] %></h1>
+	</div>
+	<div id="game_window">
+		<div id="game_options">
+<%			@location = {
+				"Cave"  => "10 - 20", 
+				"Farm" => "5 - 10", 
+				"House"  => "2 - 5" 
+			}
+			@location.each do |place, amount|
+%>				<div class="small_box">
+					<h3><%= place %></h3>
+					<p>Earn <%= amount %> gold</p>
+					<form action="rpg/<%= place %>" method="post">
+						<input name="authenticity_token" value="<%= form_authenticity_token %>" type="hidden">
+						<input type="hidden" name="<%= place %>" value="<%= amount %>"/>
+						<input type="submit" value="Find Gold!"/>
+					</form>
+				</div>
+<% 			end
+%>			<div class="small_box">
+				<h3>Casino</h3>
+				<p>Earn OR Lose<br>0 - 50 gold</p>
+				<form action="rpg/Casino" method="post">
+					<input name="authenticity_token" value="<%= form_authenticity_token %>" type="hidden">
+					<input type="hidden" name="casino" value="-50-50"/>
+					<input type="submit" value="Find Gold!"/>
+				</form>
+			</div>
+			<form class="reset" action = "rpg/reset" method="post">
+				<input name="authenticity_token" value="<%= form_authenticity_token %>" type="hidden">
+				<input type="hidden" name="reset" value="reset"/>
+				<input type="submit" value="Reset Gold"/>
+			</form>
+		</div>
+	</div>
+	<div id="act">
+		<h4>Activities:</h4>
+		<div id="act_printout">
+<%   		if !session[:messages].empty?
+				session[:messages].each do |message, color|
+%>				<p class= "<%= color %>"><%= message %></p>
+<%				end
+			end
+%>      </div>
+	</div>
+</body>
+</html>
